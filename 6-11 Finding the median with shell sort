@@ -1,0 +1,51 @@
+#include <stdio.h>
+
+#define MAXN 10
+typedef float ElementType;
+
+ElementType Median( ElementType A[], int N );
+
+int main ()
+{
+    ElementType A[MAXN];
+    int N, i;
+
+    scanf("%d", &N);
+    for ( i=0; i<N; i++ )
+        scanf("%f", &A[i]);
+    printf("%.2f\n", Median(A, N));
+
+    return 0;
+}
+
+
+void shellsort( ElementType A[], int N ) {
+	
+	for(int gap = N / 2; gap > 0; gap /= 2) {
+		int i, j, p;
+		
+		for(i = gap; i < N; i++ ){
+			ElementType key = A[i];
+			for(j = i; j >= gap && A[j - gap] > key; j -= gap) A[j] = A[j - gap];
+			A[j] = key;
+		}
+	}
+}
+
+
+ElementType Median( ElementType A[], int N ) {
+    
+//    for(int i = 0; i < N - 1; i++){
+//        int minidx = i;
+//        for(int j = i + 1; j < N; j++){
+//            if(A[j] < A[minidx]) minidx = j;
+//        }
+//        if(minidx != i) {
+//            ElementType temp = A[minidx];
+//            A[minidx] = A[i];
+//            A[i] = temp;
+//        }
+//    }
+    shellsort(A, N);
+    return A[N / 2];
+}
