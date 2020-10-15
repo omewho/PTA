@@ -1,0 +1,48 @@
+#include <stdio.h>
+
+void Print_Factorial ( const int N );
+
+int main()
+{
+    int N;
+	
+    scanf("%d", &N);
+    Print_Factorial(N);
+    return 0;
+}
+
+void Print_Factorial ( const int N ) {
+	
+	if(N < 0) printf("Invalid input\n");
+	else if (N == 0 || N == 1) printf("%d\n", 1);
+	else{
+		
+		int ans[3000] = {1}, len = 1;
+		
+		int count = 0;
+		for(int i = 1; i <= N; i++) {
+			
+			
+			int carry = 0, j;
+			for(j = 0; j < len; j++){
+				int num = ans[j] * i + carry;
+				ans[j] = num % 10;
+				carry = num / 10;
+			}
+			while(carry){
+				
+				ans[j++] = carry % 10;
+				carry /= 10;
+			}
+			len = j;
+			
+			count++;
+			
+		}
+		for(int i = len-1; i>= 0; i--){
+    		printf("%d", ans[i]);
+		}
+  		printf("\n");
+	}
+     
+}
