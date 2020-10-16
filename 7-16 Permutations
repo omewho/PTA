@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+int main() {
+    
+    int n;
+    scanf("%d", &n);
+    
+    int cnt = 0;
+    for(int i = n; i < n + 4; i++) {
+        for(int j = n; j < n + 4; j++){
+            for(int k = n; k < n + 4; k++) {
+            	
+            	if(j != k && j != i && k != i) {
+					if(cnt % 6) printf(" ");
+            		printf("%d", i * 100 + j * 10 + k );
+            		cnt++;
+				}
+            }
+            
+        }
+		printf("\n");
+    }
+    
+    return 0;
+}
