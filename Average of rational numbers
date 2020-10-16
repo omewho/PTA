@@ -19,7 +19,7 @@ RationalNum rmAdd(RationalNum rnum1, RationalNum rnum2){
 	int rgcd = gcd(rnum1.denom, rnum2.denom);
 	int rcmm = rnum1.denom / rgcd * rnum2.denom ;
 	
-	int rnumer = (rcmm / rnum1.denom) * rnum1.numer + (rcmm / rnum2.denom) * rnum2.numer;
+	int rnumer = (rnum2.denom / rgcd) * rnum1.numer + (rnum1.denom / rgcd) * rnum2.numer;
 	int resgcd = gcd(rnumer, rcmm);
 	
 	RationalNum resrnum;
