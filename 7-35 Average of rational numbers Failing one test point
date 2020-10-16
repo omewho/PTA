@@ -16,15 +16,20 @@ int gcd(int a, int b){
 }
 
 RationalNum rmAdd(RationalNum rnum1, RationalNum rnum2){
-	int rgcd = gcd(rnum1.denom, rnum2.denom);
-	int rcmm = rnum1.denom / rgcd * rnum2.denom ;
+	int g = gcd(rnum2.numer, rnum2.denom);
+	int numer2 = rnum2.numer / g;
+	int denom2 = rnum2.denom / g;
+
+	int rgcd = gcd(rnum1.denom, denom2);
 	
-	int rnumer = (rnum2.denom / rgcd) * rnum1.numer + (rnum1.denom / rgcd) * rnum2.numer;
-	int resgcd = gcd(rnumer, rcmm);
+	int resultDenom = rnum1.denom / rgcd * denom2 ;
+	
+	int resultNumer = (denom2 / rgcd) * rnum1.numer + (rnum1.denom / rgcd) * numer2;
+	int resgcd = gcd(resultNumer, resultDenom);
 	
 	RationalNum resrnum;
-	resrnum.numer = rnumer / resgcd;
-	resrnum.denom = rcmm / resgcd;
+	resrnum.numer = resultNumer / resgcd;
+	resrnum.denom = resultDenom / resgcd;
 	return resrnum;
 }
 
