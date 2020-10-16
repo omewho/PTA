@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <math.h>
+
+int gcd(int a, int b){
+	return a % b == 0 ? b : gcd(b, a % b);
+}
+
+void rmAdd(int *sumNumer, int *sumDenom, int aNumer, int aDenom){
+	
+//	printf("sumNumer = %d %d %d %d\n", *sumNumer, *sumDenom, aNumer, aDenom);
+	
+	int g = gcd(fabs(aNumer), fabs(aDenom));
+	aNumer /= g;
+	aDenom /= g;
+	
+	int gCommonDivisor = gcd(*sumDenom, aDenom );
+//	printf("gCD = %d\n", gCommonDivisor);
+	
+	int resDenom = *sumDenom / gCommonDivisor * aDenom;
+	int resNumer = *sumNumer * aDenom / gCommonDivisor + aNumer * (*sumDenom) / gCommonDivisor ;
+//	printf("res = %d/%d\n", resNumer, resDenom);
+	
+	int resGCD = gcd(resNumer, resDenom);
+	*sumNumer = resNumer / resGCD;
+	*sumDenom = resDenom / resGCD;
+}
+
+int main(){
+    
+    int n;
+    scanf("%d", &n);
+    
+    int sumNumer = 0, sumDenom = 1;
+    
+    int aNumer, aDenom;
+    for(int i = 0; i < n; i++){
+    	scanf("%d/%d", &aNumer, &aDenom);
+		rmAdd(&sumNumer, &sumDenom, aNumer, aDenom);
+//		printf("%d/%d", sumNumer, sumDenom);
+//		printf("\n");
+	}
+	
+//	printf("%d/%d\n", sumNumer, sumDenom);
+	int commonG = gcd(sumNumer, n);
+	
+	sumNumer /= commonG;
+	n /= commonG;
+	sumDenom = sumDenom * n;
+	
+	printf("%d", sumNumer);
+	if(sumDenom != 1) printf("/%d", sumDenom);
+	printf("\n");
+
+    return 0;
+}
