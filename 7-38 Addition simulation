@@ -1,0 +1,36 @@
+#include <stdio.h>
+#define MAX 100000
+
+int ans[MAX + 2];
+
+int main(){
+    
+    int a, n;
+    scanf("%d %d", &a, &n);
+    
+    if(!n) printf("0");
+    
+    else {
+    	
+   	    int item, pos = 0, carry = 0;
+    
+	    for(pos = 0; pos < n; pos++) {//simulating addition 
+	        item = a * (n - pos) + carry;
+	        ans[pos] = item % 10;
+	        carry = item / 10;
+	    }
+	    
+	    while(carry){
+	        ans[pos++] = carry % 10;
+	        carry /= 10;
+	    }
+	    
+	    for(int i = pos - 1; i >= 0; i--){
+	        printf("%d", ans[i]);
+	    }
+	}
+    
+    printf("\n");
+    
+    return 0;
+}
