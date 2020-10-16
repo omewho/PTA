@@ -1,0 +1,69 @@
+#include <stdio.h>
+typedef struct{
+	int numer;
+	int denom;	
+} RationalNum;
+
+void printRNum(RationalNum rnum){
+	printf("%d", rnum.numer);
+	if(rnum.denom != 1) printf("/%d", rnum.denom);
+	printf("\n");
+}
+
+int gcd(int a, int b){
+	
+	return a % b == 0 ? b : gcd(b, a % b);
+}
+
+RationalNum rmAdd(RationalNum rnum1, RationalNum rnum2){
+	int rgcd = gcd(rnum1.denom, rnum2.denom);
+	int rcmm = rnum1.denom / rgcd * rnum2.denom ;
+	
+	int rnumer = (rcmm / rnum1.denom) * rnum1.numer + (rcmm / rnum2.denom) * rnum2.numer;
+	int resgcd = gcd(rnumer, rcmm);
+	
+	RationalNum resrnum;
+	resrnum.numer = rnumer / resgcd;
+	resrnum.denom = rcmm / resgcd;
+	return resrnum;
+}
+
+
+RationalNum rmMulti(RationalNum rnum1, RationalNum rnum2) {
+	
+	int resdenom = rnum1.denom * rnum2.denom;
+	int resnumer = rnum1.numer * rnum2.numer;
+	int g = gcd(resdenom, resnumer);
+	RationalNum resrnum;
+	resrnum.denom = resdenom / g;
+	resrnum.numer = resnumer / g;
+	return resrnum;
+}
+
+int main(){
+    
+    int n;
+    scanf("%d", &n);
+    
+    RationalNum rnums[n];
+    
+    for(int i = 0; i < n; i++){
+    	scanf("%d/%d", &rnums[i].numer, &rnums[i].denom);    	
+	}
+	
+	RationalNum rsum;
+	rsum.numer = 0;
+	rsum.denom = 1;
+	
+	for(int i = 0; i < n; i++){
+    	rsum = rmAdd(rsum, rnums[i]);    	
+	}
+    
+    RationalNum m;
+    m.denom = n;
+    m.numer = 1;
+    
+    printRNum(rmMulti(rsum, m));
+
+    return 0;
+}
