@@ -1,0 +1,3 @@
+stringarr = input().split()
+stringarr.reverse()
+print(" ".join(stringarr))
