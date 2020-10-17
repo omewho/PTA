@@ -1,0 +1,76 @@
+#include <stdio.h>
+#define MAX 9
+
+char digits[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'};
+int dgt[MAX] = {0};
+char yi = 'Y', wan = 'W', qian = 'Q', bai = 'B', shi = 'S';
+
+int getNum(int num){
+	int n = 0;
+	while(num) {
+		n++;
+		num /= 10;
+	}
+	return n;
+}
+
+int main() {
+    
+    int n;
+    scanf("%d", &n);
+    
+    int temp = n;
+    
+    if(!temp) printf("%c\n", digits[temp]);
+    
+    else {
+    	
+		int numofD = getNum(temp); 
+    	for(int i = 0; i < numofD; i++){
+    		dgt[i] = temp % 10;
+    		temp /= 10;
+		}
+		
+    	//if(dgt[8]) printf("%cY", digits[dgt[8]]);
+    	int ystart = 0, wstart = 0, zerostart = 0, start = 0, nonzeroend = 0;
+    	for(int i = MAX - 1; i >= 0; i--){
+    		if(dgt[i]) {
+    			
+    			if(zerostart) {
+    				printf("%c", digits[0]);
+    				zerostart = 0;
+				}
+				
+    			if(!start) start = 1;
+    			printf("%c", digits[dgt[i]]);
+    			
+    			if(i == 8) {
+    				printf("%c", yi);
+    				ystart = 1;
+				}
+    			
+    			if(i % 4 == 3) printf("%c", qian);
+    			else if(i % 4 == 2) printf("%c", bai);
+    			else if(i % 4 == 1) printf("%c", shi);
+//    			
+				if(i >= 4 && !wstart) {
+					wstart = 1;
+				}
+			}
+			
+			else {//dgt[i] == 0 
+				if(!zerostart && start && (i % 4 != 0)) {
+					zerostart = 1;	
+					//printf("%c", digits[0]);
+				}
+				
+			}
+			
+			if(wstart && i == 4) printf("%c", wan);
+		}
+		
+		printf("\n");
+	}
+	
+    return 0;
+}
