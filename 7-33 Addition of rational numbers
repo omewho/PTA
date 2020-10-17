@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <math.h>
+
+int gcd(int a, int b){
+	return a % b == 0 ? b : gcd(b, a % b);
+}
+
+typedef struct {
+    int numer;
+    int denom;
+}RNum;
+
+RNum rnAdd(RNum a, RNum b){
+	
+	int ga = gcd(fabs(a.numer), fabs(a.denom));
+	int anumer = a.numer / ga;
+	int adenom = a.denom / ga;
+	//printf("anumer = %d, adenom =  %d\n", anumer, adenom);
+	
+	int gb = gcd(fabs(b.numer), fabs(b.denom));
+	int bnumer = b.numer / gb;
+	int bdenom = b.denom / gb;
+	//printf("bnumer = %d, bdenom =  %d\n", bnumer, bdenom);
+	
+	int commonDivisor = gcd(adenom, bdenom);
+	
+	int resNumer = bdenom / commonDivisor * anumer + adenom / commonDivisor * bnumer;
+	int resDenom = adenom / commonDivisor * bdenom;
+	
+	int gCD = gcd(fabs(resNumer), fabs(resDenom));
+	
+	RNum sum;
+	sum.numer = resNumer / gCD;
+	sum.denom = resDenom / gCD;
+	
+	return sum;
+}
+
+void printRNum(RNum rn) {
+	printf("%d", rn.numer);
+	if(rn.denom != 1) printf("/%d", rn.denom);
+	printf("\n");
+}
+
+int main(){
+    
+    RNum a, b, sum;
+    
+    scanf("%d/%d", &a.numer, &a.denom);
+    scanf("%d/%d", &b.numer, &b.denom);
+    
+//    printRNum(a);
+//    printRNum(b);
+    
+    sum = rnAdd(a, b);
+    
+    printRNum(sum);
+
+    return 0;
+}
