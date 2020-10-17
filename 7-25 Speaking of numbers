@@ -1,0 +1,42 @@
+#include <stdio.h>
+
+char nums[][5] = {"ling", "yi", "er", "san", "si", "wu", "liu", "qi", "ba", "jiu"};
+
+int main() {
+    
+    int n;
+    scanf("%d", &n);
+    
+    if(n < 0) {
+        printf("fu ");
+        n = -n;
+    }
+
+    int temp = n, count = 0;
+    
+    while(temp){
+        count++;
+        temp /= 10;
+    }
+        
+    temp = n;
+    int digits[count], i = 0;
+	
+	if(!temp) {
+		digits[0] = temp;
+		count++;
+	}
+	
+	
+    while(temp){
+        digits[i++] = temp % 10;
+        temp /= 10;
+    }
+	for(int iter = count - 1; iter >= 0; iter--) {
+		printf("%s", nums[digits[iter]]);
+		if(iter != 0 ) printf(" ");
+	}
+	printf("\n");
+
+    return 0;
+}
