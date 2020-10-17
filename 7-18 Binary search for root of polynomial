@@ -1,0 +1,31 @@
+#include <stdio.h>
+
+double a3, a2, a1, a0, eps = 0.001;
+double f(double x) {
+	//printf("a3 = %.2f\n", a3);
+	return a3 * x * x * x + a2 * x * x + a1 * x + a0; 
+}
+
+int main() {
+    
+    double a, b, mid;
+    scanf("%lf %lf %lf %lf", &a3, &a2, &a1, &a0); 
+    //printf("%.2f %.2f %.2f %.2f\n", a3, a2, a1, a0);
+    scanf("%lf %lf", &a, &b);
+    
+    while(b - a > eps){
+    	mid = (a + b) / 2;
+    	
+    	if(f(mid) == 0) {
+    		//printf("hahaha!\n");
+    		break;
+		}     
+		
+    	else if(f(a) * f(mid) > 0 ) a = mid;
+    	else b = mid;
+    	
+	}
+    
+    printf("%.2f\n", mid);
+    return 0;
+}
