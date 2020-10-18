@@ -1,0 +1,47 @@
+#include <stdio.h>
+
+void countoff(int arr[], int n, int *start){
+	
+    int index = *start;
+    for(int i = 0; i < 3; i++){
+    	
+    	if(!arr[index]) {//Nothing should be done, except going to the next one
+    		//printf("%d %d\n", index, i + 1);
+		}
+		else {
+			while(arr[index]) {
+//				printf("%d is skipped.\n", index);
+				index = (index + 1) % n;
+			}
+//			printf("%d %d is called\n", index, i + 1);
+		}
+		
+		if(i == 2) {
+//			printf("%d is out.\n", index);
+			arr[index] = 1;
+			*start = (index + 1) % n;
+		}
+//		printf("index = %d\n\n", index);
+        index = (index + 1) % n;
+        
+    }
+}
+
+int main() {
+    
+    int n, start = 0;
+    scanf("%d", &n);
+    
+    int arr[n];
+    for(int i = 0; i < n; i++){
+        arr[i] = 0;
+    }
+    
+    for(int i = 0; i < n - 1; i++) countoff(arr, n, &start);
+    
+    for(int i = 0; i < n; i++) {
+        if(!arr[i]) printf("%d\n", i + 1);
+    }
+    
+    return 0;
+}
