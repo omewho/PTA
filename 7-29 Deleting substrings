@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 80
+
+void readString(char *s) {
+    
+    int i = 0;
+    while((s[i] = getchar()) != '\n' && i <= MAX ) i++;
+    s[i] = '\0';
+}
+
+void printString(char *s) {
+    
+    printf("%s\n", s);
+}
+
+int find_pos(char s1[], char s2[]) {
+	int pos = -1, len = strlen(s2);
+	char temp[len + 1];
+//	printf("l = %d, \n", strlen(s1));
+	
+	int i = 0;
+	while( i <= strlen(s1) - len && s1[i]){
+		if(s1[i] == s2[0]) {
+			strncpy(temp, s1 + i, len);
+			temp[len] = '\0';
+			if(strcmp(temp, s2) == 0){
+				pos = i;
+				break;
+			}
+ 		}
+ 		
+ 		i++;
+	}
+	return pos;
+}
+
+void deleteString(char s1[], char s2[]) {
+    int len = strlen(s2);
+    
+    int pos = find_pos(s1, s2);
+    
+    while(pos != -1) {
+    	int i = pos;
+    	while(i < strlen(s1) - len) {
+    		s1[i] = s1[i + len];
+    		i++;
+		}
+    	s1[i] = '\0';
+    	
+    	//printString(s1);
+    	pos = find_pos(s1, s2);
+    	//printf("\npos = %d\ns1: %s\ns2: %s\n", pos, s1, s2);
+	}
+}
+
+int main() {
+    
+    char s1[MAX + 1], s2[MAX + 2];
+    readString(s1);
+    readString(s2);
+    
+    //printf("pos = %d\n", find_pos(s1, s2));
+    deleteString(s1, s2);
+    printString(s1);
+    return 0;
+}
