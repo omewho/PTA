@@ -1,0 +1,90 @@
+#include <stdio.h>
+
+typedef struct {
+    double real;
+    double imag;
+}CompNum;
+
+void printCN(CompNum cn){
+	
+	//printf("is real 0? %.1f\n", cn.real == 0.0);
+    if((int)(10 * cn.real) == 0 && (int)(10 * cn.imag) == 0) printf("%.1f", 0.0);
+    else if((int)(10 * cn.real) == 0) printf("%.1fi", cn.imag);
+    else if((int)(10 * cn.imag) == 0) printf("%.1f", cn.real);
+    else {
+    	printf("%.1f", cn.real);
+    	if(cn.imag < 0) printf("%.1fi", cn.imag);
+    	else printf("+%.1fi", cn.imag);
+	}  
+}
+
+CompNum Add(CompNum cn1, CompNum cn2) {
+	CompNum sum;
+	sum.real = cn1.real + cn2.real;
+	sum.imag = cn1.imag + cn2.imag;
+	
+	return sum;
+}
+
+CompNum Sub(CompNum cn1, CompNum cn2) {
+	CompNum res;
+	res.real = cn1.real - cn2.real;
+	res.imag = cn1.imag - cn2.imag;
+	
+	return res;
+}
+
+CompNum Mul(CompNum cn1, CompNum cn2) {
+	CompNum res;
+	res.real = cn1.real * cn2.real - cn1.imag * cn2.imag;
+	res.imag = cn1.real * cn2.imag + cn2.real * cn1.imag;
+	
+	return res;
+}
+
+CompNum Div(CompNum cn1, CompNum cn2) {
+	CompNum res;
+	res.real = (cn1.real * cn2.real + cn1.imag * cn2.imag) / \
+	(cn2.real * cn2.real + cn2.imag * cn2.imag);
+	res.imag = (cn1.imag * cn2.real - cn1.real * cn2.imag) / \
+	(cn2.real * cn2.real + cn2.imag * cn2.imag);
+	
+	return res;
+}
+
+void printCalc(CompNum cn1, CompNum cn2, char op) {
+	
+	printf("(%.1f", cn1.real);
+	if((int)(10 * cn1.imag) >= 0) printf("+");
+	printf("%.1fi)", cn1.imag);
+    printf(" %c ", op);
+    printf("(%.1f", cn2.real);
+    if((int)(10 * cn2.imag) >= 0) printf("+");
+    printf("%.1fi)", cn2.imag);
+    printf(" = ");
+    
+    CompNum res;
+	switch(op) {
+    	case '+' : res = Add(cn1, cn2);
+    	break;
+    	case '-' : res = Sub(cn1, cn2);
+    	break;
+    	case '*' : res = Mul(cn1, cn2);
+    	break;
+    	case '/' : res = Div(cn1, cn2);
+	};
+	printCN(res);
+    printf("\n");
+}
+
+int main() {
+    
+    CompNum cn1, cn2;
+    scanf("%lf %lf %lf %lf", &cn1.real, &cn1.imag, &cn2.real, &cn2.imag);
+    printCalc(cn1, cn2, '+');
+    printCalc(cn1, cn2, '-');
+    printCalc(cn1, cn2, '*');
+    printCalc(cn1, cn2, '/');
+    
+    return 0;
+}
