@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX 10
+
+//void readString(char str[]) {
+//	int i = 0;
+//	while((str[i] = getchar()) != '\n') i++;
+//	str[i] = '\0';
+//}
+
+void readString(char str[]) {
+	scanf("%s", str);
+}
+
+void printString(char str[]) {
+	printf("%s\n", str);
+}
+
+void bubbleSort(char *str[], int n, int k) {
+	
+	for(int nth = 0; nth < k; nth++){
+		for(int index = 0; index < n - nth - 1; index++ ) {
+			if(strcmp(str[index], str[index + 1]) > 0) {
+				char * temp = str[index];
+				str[index] = str[index + 1];
+				str[index + 1] = temp;
+			}
+			
+		}
+	}
+}
+
+int main() {
+    
+    int n, k;
+    scanf("%d %d", &n, &k);
+    
+    char *p[n], temp[MAX + 1];
+    
+    int len = 0;
+    for(int i = 0; i < n; i++) {
+    	readString(temp);
+    	len = strlen(temp);
+    	p[i] = (char *)malloc(len * sizeof(char));
+    	strcpy(p[i], temp);
+    	//printString(p[i]);
+	}
+	
+	bubbleSort(p, n, k);
+    for(int i = 0; i < n; i++) {
+    	printString(p[i]);
+	}
+    
+    return 0;
+}
