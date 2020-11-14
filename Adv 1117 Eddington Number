@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int cmp(const void *a, const void *b) {
+	
+	return *((int *)a) - *((int *)b);
+}
+
+void printArr(int *arr, int n) {
+	
+	for(int i = 0; i < n; i++) {
+		if(i != 0) printf(" ");
+		printf("%d", arr[i]);
+	}
+	printf("\n");
+}
+
+int main() {
+    
+    int n;
+    scanf("%d", &n);
+    
+    int dists[n];
+    
+    for(int i = 0; i < n; i++) {
+        scanf("%d", &dists[i]);
+    }
+    
+    //printf("%d\n", cmp(&dists[0], &dists[1]));
+    
+    qsort(dists, n, sizeof(int), cmp);
+    
+    //printArr(dists, n);
+    int res = 0;
+    for(int i = 0; i < n; i++) {
+    	if(dists[i] > n - i) {
+    		res = n - i;
+    		break;
+		}
+	}
+    
+    printf("%d\n", res);
+    
+    return 0;
+}
