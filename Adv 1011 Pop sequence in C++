@@ -1,0 +1,40 @@
+#include <iostream>
+#include <stack>
+using namespace std;
+
+int main() {
+    
+     
+    int m, n, k;
+    scanf("%d %d %d", &m, &n, &k);
+    
+    for(int i = 0; i < k; i++) {
+    	int sequence[n];
+    	for(int j = 0; j < n; j++) {
+    		scanf("%d", &sequence[j]);
+		}
+		
+		stack<int> s;
+		
+		int q = 0, fullstack = 0;
+		for(int p = 0; p < n; p++) {
+			if(s.size() == m) {
+				printf("NO\n");
+				fullstack = 1;
+				break;
+			}
+			else s.push(p + 1);
+			while(!s.empty() && s.top() == sequence[q]) {
+				//printf("%d will be popped out.\n", s.top());
+				s.pop();
+				q++;
+			}	
+		}
+		if(!fullstack) {
+			if(s.size()) printf("NO\n");
+			else printf("YES\n");
+		}	
+	}
+    
+    return 0;
+}
