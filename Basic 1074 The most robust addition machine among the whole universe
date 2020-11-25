@@ -1,0 +1,98 @@
+#include <iostream>
+#include <cstring>
+#define MAX 20
+
+using namespace std;
+
+int answer[MAX + 10];
+int idx = 0;
+
+void readString(char *str) {
+	
+	int i = 0;
+	while(i <= MAX && ((str[i] = getchar()) != '\n')  ) i++;
+	str[i] = '\0';
+}
+
+void reverseString(char *str, int num) {
+	
+	for(int i = 0; i < num / 2; i++) {
+		char temp = str[num - 1 - i];
+		str[num - 1 - i] = str[i];
+		str[i] = temp;
+	}
+}
+
+void add(char *input, char *num1, char *num2, int len) {
+	
+	int sum = 0, carry = 0, p = 0, base;
+	//printf("%d\n", num1[3]);
+	while(num1[p] && num2[p]) {
+		
+		base = input[p] - '0';
+		if(!base) base = 10;
+		answer[idx++] = (  ( num1[p] + num2[p] - 2 * '0' ) + carry ) % base ;
+		carry =  (  ( num1[p] + num2[p] - 2 * '0' ) + carry ) / base;
+		//printf("answer is %d, carry is %d\n", answer[idx - 1], carry);
+		p++;
+	}
+	
+	if(num1[p] && p <= len) {
+		while(num1[p]) {
+			base = input[p] - '0';
+			if(!base) base = 10;
+			
+			answer[idx++] = ( num1[p] - '0'  + carry ) % base;
+			carry = ( num1[p] - '0' + carry ) / base;
+			//printf("answer is %d, carry is %d\n", answer[idx - 1], carry);
+			p++;
+		}
+	}
+	
+	else if(num2[p] && p <= len) {
+		while(num2[p]) {
+			
+			base = input[p] - '0';
+			if(!base) base = 10;
+						
+			answer[idx++] = ( num2[p] - '0'  + carry ) % base;
+			carry = ( num2[p] - '0' + carry ) / base;
+			//printf("answer is %d, carry is %d\n", answer[idx - 1], carry);
+			
+			p++;
+		}
+	}
+	
+	while(carry) {
+		answer[idx++] = carry % 10;
+		carry = carry / 10;
+	}
+}
+
+int main() {
+	
+	char input[MAX + 1], num1[MAX + 1], num2[MAX + 1];
+	
+	readString(input);
+	readString(num1);
+	readString(num2);
+	
+	reverseString(input, strlen(input));
+	reverseString(num1, strlen(num1));
+	reverseString(num2, strlen(num2));
+	
+	add(input, num1, num2, strlen(input));
+	
+	int i = idx;
+	while(answer[i] == 0 && i >= 0) i--;
+	
+	if(i == -1) printf("0\n");
+	else {
+		for(; i >= 0; i--) {
+			printf("%d", answer[i]);
+		}
+		printf("\n");		
+	}
+	
+    return 0;
+}
