@@ -1,0 +1,137 @@
+#include <iostream>
+
+#define MAX 100000
+
+using namespace std;
+
+void printArr(int arr[][6], int num) {
+	for(int i = 0; i < num; i++) {
+		for(int j = 0; j < 6; j++) {
+			if(j) printf(" ");
+			printf("%d", arr[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+
+int main() {
+	
+	int n, k;
+	scanf("%d%d", &n, &k);
+	
+	int keys[k][6] = {0}, wrongs[k][6] = {0};// keys[i][0] stores the total points of the ith problem
+	double scores[n] = {0};  
+	
+	//printArr(keys, k);
+	
+	int ttlkeynums[k], keynum[k];
+	for(int i = 0; i < k; i++) {
+		scanf("%d %d %d", &keys[i][0], &ttlkeynums[i], &keynum[i]);
+		char keychar;
+		for(int j = 0; j < keynum[i]; j++) {
+			getchar();
+			scanf("%c", &keychar);
+			//printf("%c", keychar);
+			//getchar();
+			keys[i][keychar - 'a' + 1] = 1;
+		}
+		
+		//printf("\n%d %d %d", keys[i][0], ttlkeynums[i], keynum[i]);
+//		for(int j = 1; j <= ttlkeynums[i]; j++ ) {
+//			if(keys[i][j]) printf(" %c", j - 1 + 'a');
+//		}
+//		printf("\n");
+	}
+	
+	int ansnum;
+	char anschar;
+	
+	for(int i = 0; i < n; i++) { //ith person
+		getchar();
+		int answeri[k][6] = {0}; 
+		for(int j = 0; j < k; j++) { // jth problem
+		
+			
+			int haswrong = 0, correctnum = 0;
+			getchar();
+			scanf("%d", &ansnum);
+			//printf("%d", ansnum);
+			for(int p = 0; p < ansnum; p++) {
+				getchar();
+				scanf("%c", &anschar);
+				//printf("%c", anschar);
+				
+				int idx = anschar - 'a' + 1;
+				answeri[j][idx] = 1;
+				if(answeri[j][idx] == keys[j][idx]) {
+					
+					//printf("%c is correct\n", idx - 1 + 'a');
+					correctnum++;
+				}
+				else {
+					if(!haswrong) haswrong = 1;
+					//printf("%c is wrong\n", idx - 1 + 'a');
+					wrongs[j][idx]++;
+					//printf("the %dth %d is wrong\n", j, idx);
+				}
+				
+				
+				
+			}
+			getchar();
+			if(j != k - 1)getchar();
+			//
+			//printf("j is %d\n", j);
+			if(!haswrong && correctnum == keynum[j]) {
+				
+				//scores[i][j + 1] = keys[j][0] * 1.0;
+				//printf("j is %d, full point is %d\n", j, keys[j][0]);
+				scores[i] += keys[j][0] * 1.0;
+				//printf("score is now %.1f\n", scores[i]);
+			}
+			else if(!haswrong && correctnum != keynum[j]) {
+				//scores[i][j + 1] = keys[j][0] * 1.0 / 2;
+				//printf("j is %d now, full point is %.1f, half full point is %.1f\n", j, keys[j][0] * 1.0, keys[j][0] * 0.5 );
+				scores[i] += keys[j][0] * 1.0 / 2;
+			}
+			//else printf("score remains to be %.1f\n", scores[i]);
+			
+			for(int p = 1; p <= keynum[j]; p++) {
+				if(keys[j][p]) if( answeri[j][p] != keys[j][p]) wrongs[j][p]++;
+			}
+			
+		}
+		printf("%.1f\n", scores[i]);
+		//printArr(answeri, k);
+		
+	}
+	//printArr(wrongs, k);
+	
+	int maxwrong = 0, error = 0;
+	
+	for(int i = 0; i < k; i++) {
+		for(int j = 1; j <= ttlkeynums[i]; j++) {
+			if( wrongs[i][j] > maxwrong) {
+				maxwrong = wrongs[i][j];
+				if(!error) error = 1;
+			}
+		}
+	}
+	//printf("maxwrong is %d\n", maxwrong);
+	if(error) {
+		for(int i = 0; i < k; i++) {
+			//printf("keynum is %d\n", ttlkeynums[i]);
+			for(int j = 1; j <= ttlkeynums[i]; j++) {
+				if( wrongs[i][j] == maxwrong) {
+					printf("%d %d-%c\n", maxwrong, i + 1, j - 1 + 'a');
+				}
+			}
+		}		
+				
+	}
+
+	else printf("Too simple\n");
+	
+    return 0;
+}
