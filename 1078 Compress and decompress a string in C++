@@ -1,0 +1,80 @@
+#include <iostream>
+#include <cstring>
+#include <string>
+#include <stdlib.h>
+#define MAX 1000
+using namespace std;
+
+void readString(char * str) {
+	int i = 0;
+	while( i <= MAX && (str[i] = getchar()) != '\n') i++;
+	str[i] = '\0';
+}
+
+void compress(string str) {
+	
+	//printf("%s\n", str.c_str());
+	int i = 0, j = 0, count;
+	while(str[i]) {
+		//i = j;
+		count= 0;
+		while(str[i] == str[j]) {
+			count++;
+			i++;
+		}
+		if(count != 1) {
+			printf("%d", count);
+		}
+		printf("%c", str[j]);
+		j = i;
+	}
+	printf("\n");
+	
+}
+
+void decompress(string str) {
+	
+	//printf("%s %d\n", str, strlen(str));
+	int i = 0, num, pos;
+	char nums[MAX + 1];
+	while(i < str.size()) {
+		num = 0;
+		if(isdigit(str[i])) {
+			int k = i, pos = 0;
+			while(str[k] && isdigit(str[k])) {
+				nums[pos++] = str[k++];
+			}
+			nums[pos] = '\0';
+			num = atoi(nums);
+			//printf("k is %d, %s, num is %d\n", k, nums, num);
+			for(int j = 0; j < num; j++) {
+				printf("%c", str[k]);
+			}
+			i = k + 1;
+		}
+		else {
+			printf("%c", str[i]);
+			i++;
+		}
+	}
+	printf("\n");
+	
+}
+
+int main() {
+	
+	char ch;
+	
+	string str;
+	cin>>ch;
+	getchar();
+	getline(cin, str);
+	//cout<<str<<endl;
+	if(ch == 'C') compress(str);
+	else if(ch == 'D') {
+		if(str.size()) decompress(str);
+	}
+	
+    
+    return 0;
+}
