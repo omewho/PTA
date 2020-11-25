@@ -1,0 +1,42 @@
+def compress(str):
+    #print(str)
+    p, q = 0, 0
+    while(p < len(str)):
+        count = 0
+        while( q < len(str) and str[q] == str[p]):
+            count += 1;
+            q += 1;
+        if count > 1:
+            print(count, end = "")
+        print(str[p], end = "")
+        p = q
+    print()
+
+def decompress(str):
+    
+    p, q = 0, 0
+    
+    while(p < len(str)):
+        
+        if str[p].isdigit():
+            q = p
+            num = ""
+            while( str[q].isdigit() ):
+                num += str[q]
+                q += 1
+            for i in range( int(num)):
+                print(str[q], end = "")
+            p = q + 1
+        else:
+            print(str[p], end = "")
+            p += 1
+        #print("p is %d"%p)
+    print()
+     
+cmd = input()
+str = input()
+
+if cmd == 'C':
+    compress(str)
+else:
+    decompress(str)
