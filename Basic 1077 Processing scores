@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int getRound(double d) {
+	int d_int;
+	d_int = (int) d;
+	if (  ((int) (d * 10)) % 10 >= 5   ) d_int++;
+	
+	return d_int;
+}
+
+int main() {
+	
+	int n, m;
+	
+	scanf("%d%d", &n, &m);
+	
+	int scores[n], s, tchscore, stuscore, minscore, maxscore, sum, validnum;
+	
+	for(int i = 0; i < n; i++) {
+		minscore = m, maxscore = 0, sum = 0, validnum = n - 3;
+		for(int j = 0; j < n; j++) {
+			
+			scanf("%d", &s);
+			if(!j) tchscore = s;
+			else {
+				if( !(s < 0 || s > m) ) {
+					stuscore = s;
+					sum += stuscore;
+					
+					if( minscore > stuscore ) minscore = stuscore;
+					if( stuscore > maxscore ) maxscore = stuscore;
+				}
+				else validnum--;
+				
+				//printf("sum is updated to %d\n", sum);
+					
+			}
+		}
+		//printf("sum = %d\n", sum);
+		sum -= minscore + maxscore;
+		
+		//printf("min is %d, max is %d, sum is %d, validnum is %d\n", minscore, maxscore, sum, validnum);
+		scores[i] = getRound( (tchscore + sum * 1.0 / validnum) / 2 );
+		printf("%d\n", scores[i]);
+		
+	}
+	
+    
+    return 0;
+}
