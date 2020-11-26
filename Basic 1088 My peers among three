@@ -1,0 +1,43 @@
+#include <iostream>
+#include <cstring>
+#define MAX 20
+
+using namespace std;
+
+void printAns(int m, double xyz) {
+	
+	//printf("%.1f\n", xyz);
+	if(m == xyz) printf(" Ping");
+	else if (m > xyz) printf(" Gai");
+	else printf(" Cong");
+}
+
+int main() {
+	
+	int m, x, y;
+	scanf("%d%d%d", &m, &x, &y);
+	
+	int b, hasSolution = 0;
+	double c;
+	
+	for(int i = 99; i >= 10; i--){
+		
+		b = i % 10 * 10 + i / 10;
+		
+		c = abs(i - b) * 1.0 / x;
+		
+		if( b * 1.0 / y == c) {
+			hasSolution = 1;
+			printf("%d", i);
+			printAns(m, i);
+			printAns(m, b);
+			printAns(m, c);
+			printf("\n");
+			break;
+		}
+	}
+	
+	if(!hasSolution) printf("No Solution\n");
+
+    return 0;
+}
