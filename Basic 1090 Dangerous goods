@@ -1,0 +1,78 @@
+#include <iostream>
+#include <cstring>
+#include <map>
+#include <vector>
+#define MAXL 100000
+#define MAXN 20000
+
+using namespace std;
+
+map< int, vector<int> > mp;
+
+vector<int>::iterator it;
+
+
+void printArr(int *arr, int num) {
+	
+	for(int i = 0; i < num; i++) {
+		if(i) printf(" ");
+		printf("%05d", arr[i]);
+	}
+	printf("\n");
+}
+
+
+int main() {
+	
+	int n, m, a, b, num;
+	scanf("%d%d", &n, &m);
+	
+	for(int i = 0; i < n; i++) {
+		scanf("%d%d", &a, &b);
+		mp[a].push_back(b);
+		mp[b].push_back(a);
+	}
+	
+	//printf("%d\n", mp.size());
+	map< int, vector<int> >::iterator mpit;
+	
+//	for(mpit = mp.begin(); mpit != mp.end(); mpit++ ) {
+//		printf("%d\n", (mpit->second.size()));
+//		printf("%d's couples are:\n'", mpit->first);
+//		for(it = mpit->second.begin(); it != mpit->second.end(); it++) {
+//			printf("%d ", *it);
+//		}
+//		printf("\n");
+//	}
+	
+	
+	for(int i = 0; i < m; i++) {
+		scanf("%d", &num);
+		
+		int goods[num], ispresent[MAXL] = {0}, danger = 0;
+		for(int j = 0; j < num; j++) {
+			scanf("%d", &goods[j]);
+			ispresent[goods[j]] = 1;
+		}
+//		printArr(goods, num);
+//		printf("\n");
+		for(int j = 0; j < num; j++) {
+			mpit = mp.find(goods[j]);
+			if(mpit != mp.end()) {
+				//printf("%d ", mpit->first);
+				for(it = mpit->second.begin(); it != mpit->second.end(); it++) {
+					if(ispresent[*it]) {
+						//printf("%d\n", *it);
+						if(!danger) danger = 1;
+					}
+				}
+			}	
+		}
+		
+		if(danger) printf("No");
+		else printf("Yes");
+		printf("\n");
+	}
+	
+    return 0;
+}
