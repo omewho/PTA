@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <math.h>
+
+int liars[101];
+int idx = 0;
+
+int main() {
+	
+	int n;
+	scanf("%d", &n);
+	
+	int claims[n + 1];
+	for(int i = 0; i < n; i++) {
+		scanf("%d", &claims[i + 1]);
+	}
+	
+	int foundSolution = 0;
+	
+	for(int i = 1; i < n; i++) {
+		
+		for(int j = i + 1; j < n + 1; j++) {
+			
+			//printf("i = %d, j = %d\n", i, j);
+			idx = 0;
+			
+			int supposedly[n + 1];
+			
+			for(int k = 1; k < n + 1; k++) {
+				if(k == i || k == j) supposedly[k] = -1;
+				else supposedly[k] = 1;
+			}
+			
+//			for(int k = 1; k < n + 1; k++) {
+//				printf("k = %d, claim is %d, supp is %d\n", k, claims[k], supposedly[ abs(claims[k] ) ]);
+//			}
+			
+			
+			for(int k = 1; k < n + 1; k++) {
+				
+				if( claims[k] * supposedly[ abs(claims[k])] < 0 ) {
+					liars[idx++] = k;
+					//printf("k = %d\n", k);
+				}
+			}
+//			for(int k = 0; k < idx; k++) {
+//				printf("claims: %d, suppo: %d, liar: %d\n", claims[k], supposedly[ abs(claims[k])], liars[k]);
+//			} 
+			
+			if(idx == 2 && supposedly[liars[0]] + supposedly[liars[1]] == 0) {
+				if(!foundSolution) {
+					foundSolution = 1;
+					printf("%d %d\n", i, j);
+					break;
+				}
+			}
+				
+		}
+	}
+	
+	if(!foundSolution) printf("No Solution\n");
+	
+    return 0;
+}
