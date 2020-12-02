@@ -1,0 +1,110 @@
+#include <stdio.h>
+#define MAXN 500
+
+const int INF = 1e9;
+
+typedef enum { false, true } bool;
+typedef int Vertex;
+
+int teamnums[MAXN], roadlengths[MAXN][MAXN], teamcollected[MAXN], shortestpathNum[MAXN], shortestDist[MAXN];
+
+bool citycollected[MAXN];
+
+void initializeMap( int num) {
+	
+	for(int i = 0; i < num; i++) {
+		for(int j = 0; j < num; j++) {
+			roadlengths[i][j] = INF;
+		}
+	}
+}
+
+void printArr(int *arr, int num) {
+	for(int i = 0; i < num; i++) {
+		if(i) printf(" ");
+		printf("%d", arr[i]);
+	}
+	printf("\n");
+}
+
+void Dijkstra(int VertexNum) {
+	
+	while(true) {
+		int idx = -1, MinDist = INF;
+		for(int i = 0; i < VertexNum; i++) {
+			
+			//printf("i is %d, shortest is %d, is it collected? %d\n", i, shortestDist[i], citycollected[i]);
+			
+			if(!citycollected[i] && shortestDist[i] < MinDist) {
+				
+				idx = i;
+				MinDist = shortestDist[i];
+				//printf("idx is %d, MinDist is %d\n", idx, MinDist);
+			}
+		}
+		//printf("selection finished...\n");
+		
+		if(idx == -1) break;
+		citycollected[idx] = true;
+		
+		Vertex V;
+		for(V = 0; V < VertexNum; V++) {
+			if( roadlengths[idx][V] < INF && !citycollected[V]) {
+				
+				if( shortestDist[idx] + roadlengths[idx][V] < shortestDist[V] ) {
+					shortestDist[V] = shortestDist[idx] + roadlengths[idx][V];
+					shortestpathNum[V] = shortestpathNum[idx];
+					teamcollected[V] = teamcollected[idx] + teamnums[V];
+				}
+				
+				else if(shortestDist[idx] + roadlengths[idx][V] == shortestDist[V]) {
+					
+					shortestpathNum[V] += shortestpathNum[idx];
+					
+					if(teamcollected[idx] + teamnums[V] > teamcollected[V]) \
+					teamcollected[V] = teamcollected[idx] + teamnums[V]; 
+					
+				}
+			}	
+		}
+	}
+	 
+}
+
+
+int main() {
+	
+
+	int n, m, C1, C2, city1, city2, length;
+	scanf("%d%d%d%d", &n, &m, &C1, &C2);
+	
+	
+	initializeMap(n);
+	
+	for(int i = 0; i < n; i++) {
+		scanf("%d", &teamnums[i]);
+	}
+	
+	
+	for(int edge = 0; edge < m; edge++) { // insert edges
+		scanf("%d%d%d", &city1, &city2, &length);
+		roadlengths[city1][city2] = roadlengths[city2][city1] = length;
+	}
+	
+	for(int i = 0; i < n; i++) {
+		shortestDist[i] = INF;
+	}
+	
+	//printArr(shortestDist, n);
+	//citycollected[city1] = true;
+	shortestDist[C1] = 0;
+	shortestpathNum[C1] = 1;
+	teamcollected[C1] = teamnums[C1];
+	
+	//printArr(shortestDist, n);
+	
+	Dijkstra(n);
+    printf("%d %d\n", shortestpathNum[C2], teamcollected[C2]);
+    
+    return 0;
+}
