@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef char ElementType;
+typedef struct TNode *Position;
+typedef Position BinTree;
+struct TNode{
+    ElementType Data;
+    BinTree Left;
+    BinTree Right;
+};
+
+void readInput(char *arr, int num) {
+	
+	getchar();
+	for(int i = 0; i < num; i++) {
+		scanf("%c", &arr[i]);
+	}	
+}
+
+BinTree reConstructTree(char *preOrder, char *inOrder, int len){
+	BinTree root;
+	
+	if(len == 0) return NULL;
+	
+	root = (BinTree)malloc(sizeof(struct TNode));
+	root->Data = preOrder[0];
+	root->Left = NULL;
+	root->Right = NULL;
+	
+	int pos = -1;	
+	for(int i = 0; i < len; i++) {
+		if(inOrder[i] == preOrder[0]) {
+			pos = i;
+			break;
+		}
+	}
+	root->Left = reConstructTree(preOrder + 1, inOrder, pos);
+	root->Right = reConstructTree(preOrder + pos + 1, inOrder + pos + 1, len - pos - 1);
+
+	return root;
+}
+
+int getHeight(BinTree BST) {
+	
+	if(BST) return getHeight(BST->Left) > getHeight(BST->Right) ? getHeight(BST->Left) + 1 : getHeight(BST->Right) + 1;
+	else return 0;
+}
+
+int main(){
+	
+    BinTree BST;
+    int N;
+
+    BST = NULL;
+    scanf("%d", &N);
+    
+    char preOrder[N], inOrder[N];
+    
+    readInput(preOrder, N);
+    readInput(inOrder, N);
+    
+    BST = reConstructTree(preOrder, inOrder, N);
+    
+    printf("%d\n", getHeight(BST));
+
+    return 0;
+}
