@@ -1,0 +1,95 @@
+#include <stdio.h> 
+#include <stdlib.h>
+#define MAXN 50
+
+typedef struct treeNode *Tree;
+struct treeNode{
+	char Data;
+	Tree Left, Right;
+};
+
+char pre[MAXN], in[MAXN];
+
+void read(int num) {
+	for(int i = 0; i < num; i++) {
+		scanf("%c", &pre[i]);
+	}
+	getchar();
+	for(int i = 0; i < num; i++) {
+		scanf("%c", &in[i]);
+	}
+}
+
+void printArrs(int num) {
+	for(int i = 0; i < num; i++) {
+		printf("%c", pre[i]);
+	}
+	printf("\n");
+	for(int i = 0; i < num; i++) {
+		printf("%c", in[i]);
+	}
+	printf("\n");
+}
+
+Tree buildTree(int preLeft, int inLeft, int num) {
+	
+	if(num) {
+		char ch = pre[preLeft];
+		int pos, left_num, right_num;
+		for(int i = inLeft; i < inLeft + num; i++) {
+			if(in[i] == ch) {
+				pos = i;
+				left_num = i - inLeft;
+				right_num = num - 1 -left_num;
+				//printf("i is %d. in[%d] is %c, num is %d, left_num is %d, right num is %d\n", i, i, in[i], num, i - inLeft, right_num);
+				
+			}
+		}
+		
+		Tree t = (Tree)malloc(sizeof(struct treeNode));
+		t->Data = pre[preLeft];
+		t->Left = buildTree(preLeft + 1, inLeft, left_num);
+		t->Right = buildTree(preLeft + 1 + left_num, pos + 1, right_num);
+		
+		return t;
+	}
+	
+	return NULL;
+}
+
+int getHeight(Tree t) {
+	
+	int height = 0, leftheight, rightheight, max;
+	if(t) {
+		leftheight = getHeight(t->Left);
+		rightheight = getHeight(t->Right);
+		
+		max = leftheight > rightheight? leftheight: rightheight;
+		height = max + 1;
+		return height;
+	}
+	
+	return height;
+}
+//void preorder(Tree t) {
+//	
+//	if(t) {
+//		printf("%c", t->Data);
+//		preorder(t->Left);
+//		preorder(t->Right);
+//	}
+//}
+
+int main() {
+	
+	int n;
+	scanf("%d\n", &n);
+	
+	read(n);
+	//printArrs(n);
+	Tree t = buildTree(0, 0, n);
+	//preorder(t);
+	printf("%d\n", getHeight(t));
+
+	return 0;
+}
