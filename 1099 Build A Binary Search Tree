@@ -1,0 +1,87 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MaxN 100 
+
+struct treeNode{
+	int data;
+	int left, right;
+};
+typedef struct treeNode TNode;
+
+TNode nodes[MaxN];
+int in[MaxN], idx;
+
+
+void buildTree(int n) {
+	int l, r;
+	for(int i = 0; i < n; i++) {
+		scanf("%d%d", &nodes[i].left, &nodes[i].right);
+	}
+}
+
+void buildinOrder(int root) {
+	
+	if( root != -1 ) {
+		
+		buildinOrder(nodes[root].left);
+		nodes[root].data = in[idx++];
+		buildinOrder(nodes[root].right);
+	}	
+}
+
+void inOrder(int root) {
+	if(root != -1) {
+		inOrder(nodes[root].left);
+		printf(" %d", nodes[root].data);
+		inOrder(nodes[root].right);
+	}
+}
+
+void read(int n) {
+	for(int i = 0; i < n; i++) {
+		scanf("%d", &in[i]);
+	}
+}
+
+int comp(const void *pa, const void *pb) {
+	
+	return *((int *)pa) - *((int *)pb);
+}
+
+void lvlOrder(int root) {
+	
+	TNode Queue[MaxN];
+	int front = 0, rear = 0, idx = 0;
+	
+	Queue[rear++] = nodes[root];
+	
+	while(front != rear) {
+		TNode tnode = Queue[front++];
+		if(idx) printf(" ");
+		printf("%d", tnode.data);
+		idx++;
+		
+		if(tnode.left != -1) Queue[rear++] = nodes[tnode.left];
+		if(tnode.right != -1) Queue[rear++] = nodes[tnode.right];
+		
+	}
+}
+
+int main() {
+	
+	int n;
+	scanf("%d", &n);
+	
+	buildTree(n);
+	read(n);
+	
+	qsort(in, n, sizeof(int), comp);
+	
+	int root = 0;
+	buildinOrder(root);
+	//inOrder(root);
+	//printf("\nroot is %d..\n", nodes[root].data);
+	lvlOrder(root);
+	
+	return 0;
+}
