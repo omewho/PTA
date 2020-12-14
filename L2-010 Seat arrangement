@@ -1,0 +1,105 @@
+#include <stdio.h>
+#define MaxN 100
+
+int set[MaxN], Graph[MaxN][MaxN];
+
+void initSet(int Nv){
+	for(int i = 0; i < Nv; i++) {
+		set[i] = -1;
+	}
+}
+
+int findParent(int Vernum) {
+	
+	int alias = Vernum, temp;
+	while(set[Vernum] >= 0) Vernum = set[Vernum];
+	
+	while(set[alias] >= 0) {
+		
+		temp = alias;
+		alias = set[alias];
+		set[temp] = Vernum;
+	}
+	
+	return Vernum;
+}
+
+void Union(int root1, int root2) {
+	
+	if(set[root1] < set[root2] ) {// root1 has more elements than root2;
+		
+		set[root1] += set[root2];
+		set[root2] = root1;
+	}
+	else {
+		set[root2] += set[root1];
+		set[root1] = root2;
+	}
+	
+}
+
+void readGraph(int Nv, int Ne) {
+	
+	initSet(Nv);
+	int u, v, rel, pu, pv;
+	for(int i = 0; i < Ne; i++) {
+		
+		scanf("%d%d%d", &u, &v, &rel);
+		u--, v--;
+		Graph[u][v] = Graph[v][u] = rel;
+		
+		if(rel == 1) {
+			pu = findParent(u);
+			pv = findParent(v);
+			if(pu != pv) Union(pu, pv);
+		}
+		
+	}
+	
+}
+
+void printArr(int *arr, int num) {
+	
+	for(int i = 0; i < num; i++) {
+		
+		if(i) printf(" ");
+		printf("%d", arr[i]);
+	}
+	printf("\n");
+}
+
+int main() {
+	
+	int Nv, Ne, K;
+	scanf("%d%d%d", &Nv, &Ne, &K);
+	
+	readGraph(Nv, Ne);
+	
+//	for(int i = 0; i < Nv; i++) {
+//		if(i) printf(" ");
+//		printf("%d", i);
+//	}
+//	printf("\n");
+//	
+//	printArr(set, Nv);
+	
+	int guest1, guest2, p1, p2;
+	//printf("parent of %d is %d\n", i, findParent(i));
+	
+	for(int i = 0; i < K; i++) {
+		scanf("%d%d", &guest1, &guest2);
+		guest1--, guest2--;
+		
+		p1 = findParent(guest1);
+		p2 = findParent(guest2);
+		if(Graph[guest1][guest2] == -1 ) {
+			if( p1 != p2 ) printf("No way\n");
+			else printf("OK but...\n");
+		}
+		else if( Graph[guest1][guest2] == 1 ) printf("No problem\n");
+		else printf("OK\n");
+		
+	}
+	
+	return 0;
+}
