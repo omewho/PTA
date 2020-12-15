@@ -1,0 +1,104 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define Max 30
+
+typedef struct treeNode * Tree;
+struct treeNode {
+	int Data;
+	Tree Left, Right;
+};
+
+int pre[Max], post[Max], in[Max];
+
+void readArr(int *arr, int num) {
+	
+	for(int i = 0; i < num; i++) {
+		scanf("%d", &arr[i]);
+	}
+}
+
+void printArr(int *arr, int num) {
+	for(int i = 0; i < num; i++) {
+		if(i) printf(" ");
+		printf("%d", arr[i]);
+	}
+	printf("\n");
+}
+
+Tree buildTree(int postLeft, int inLeft, int num) {
+	
+	if(num) {
+		Tree t = (Tree)malloc(sizeof(struct treeNode));
+		
+		t->Data = post[postLeft + num - 1];
+		//printf("tData is %d\n", t->Data);
+		
+		int pos = -1;
+		//printf("%d\n", inLeft + num);
+		
+		for(int i = inLeft; i < inLeft + num; i++) {
+			if(in[i] == t->Data) {
+				pos = i;
+			//	printf("pos is %d.\n", pos);
+				break;
+			}
+				
+		}
+		//printf("%d\n", pos - inLeft);
+		//printf("left %d %d %d\n", postLeft, inLeft, pos - inLeft );
+		t->Left = buildTree(postLeft, inLeft, pos - inLeft);
+		//printf("right %d %d %d\n", postLeft + pos - inLeft, pos + 1, num - pos + inLeft - 1);
+		t->Right = buildTree(postLeft + pos - inLeft, pos + 1, num - pos + inLeft - 1 );	
+		
+		return t;
+	}
+	return NULL;
+}
+
+int idx;
+
+void lvlOrder(Tree t, int num) {
+	
+	Tree Queue[num];
+	int front = 0, rear = 0, idx = 0;
+	
+	if(t) Queue[rear++] = t;
+	
+	while(front != rear) {
+		
+		Tree tree_front = Queue[front++];
+		if(idx) printf(" ");
+		printf("%d", tree_front->Data);
+		idx++;
+		
+		if(tree_front->Left) Queue[rear++] = tree_front->Left;
+		if(tree_front->Right ) Queue[rear++] = tree_front->Right;
+	}
+	
+}
+
+void preOrder(Tree t) {
+	
+	if(t) {
+		printf("%d", t->Data);
+		preOrder(t->Left);
+		preOrder(t->Right);
+	}
+}
+
+int main() {
+	
+	int n;
+	scanf("%d", &n);
+	readArr(post, n);
+	//printArr(post, n);
+	
+	readArr(in, n);
+	//printArr(in, n);
+	Tree t = buildTree(0, 0, n);
+	
+	lvlOrder(t, n);
+	//preOrder(t);
+	
+	return 0;
+}
