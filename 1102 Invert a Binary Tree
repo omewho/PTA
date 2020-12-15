@@ -1,0 +1,108 @@
+#include <stdio.h>
+#include <ctype.h>
+#define MaxN 100 
+#define MaxS 3
+
+typedef enum{false, true} bool;
+struct treeNode{
+	int data;
+	int left, right;
+};
+typedef struct treeNode TNode;
+
+TNode nodes[MaxN];
+int in[MaxN], idx_in, pre[MaxN], inx_pre;
+
+bool isNotRoot[MaxN];
+
+void readaLine(char *aLine) {
+	
+	int i = 0;
+	while(i < MaxS + 1 && (aLine[i] = getchar()) != '\n') i++;
+	aLine[i] = '\0';
+}
+
+void translate(char ch, int index, int left) {
+	
+	int tree;
+	if(isdigit(ch)) {
+		tree = ch - '0';
+		isNotRoot[tree] = true;
+	}
+	else tree = -1;
+	
+	if(left ) {
+		nodes[index].left = tree;
+	}
+	else nodes[index].right = tree;
+}
+
+int buildTree(int n) {
+	int root = -1;
+	char lchar, rchar, aLine[MaxS + 1];
+	for(int i = 0; i < n; i++) {
+		
+		readaLine(aLine);
+		lchar = aLine[0], rchar = aLine[2];
+		
+//		printf("lchar is %c\n", lchar);
+//		printf("rchar is %c\n", rchar);
+		//getchar();
+		//printf("%c %c\n", lchar, rchar);
+		nodes[i].data = i;
+		translate(rchar, i, 1);
+		translate(lchar, i, 0);
+		//printf("%d %d %d\n", i, nodes[i].left, nodes[i].right);
+	}
+	
+	for(int i = 0; i < n; i++) {
+		if(!isNotRoot[i]) root = i;
+	}
+	return root;
+}
+
+void inOrder(int root) {
+	if(root != -1) {
+		inOrder(nodes[root].left);
+		if(idx_in) printf(" ");
+		printf("%d", nodes[root].data);
+		idx_in++;
+		inOrder(nodes[root].right);
+	}
+}
+
+
+void lvlOrder(int root) {
+	
+	TNode Queue[MaxN];
+	int front = 0, rear = 0, idx = 0;
+	
+	Queue[rear++] = nodes[root];
+	
+	while(front != rear) {
+		TNode tnode = Queue[front++];
+		if(idx) printf(" ");
+		printf("%d", tnode.data);
+		idx++;
+		
+		if(tnode.left != -1) Queue[rear++] = nodes[tnode.left];
+		if(tnode.right != -1) Queue[rear++] = nodes[tnode.right];
+		
+	}
+}
+
+int main() {
+	
+	int n;
+	scanf("%d", &n);
+	//printf("%d\n", n);
+	getchar();
+	int t = buildTree(n);
+	//printf("root is %d\n", t);
+	lvlOrder(t);
+	printf("\n");
+	inOrder(t);
+	printf("\n");
+	
+	return 0;
+}
