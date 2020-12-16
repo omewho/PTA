@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define LEN 5
+
+typedef struct ListNode *List;
+struct ListNode {
+	int id;
+	List Next;
+};
+
+void initLArray(List *lArray, int num) {
+	for(int i = 1; i <= num; i++) {
+		lArray[i] = (List)malloc(sizeof(struct ListNode));
+		lArray[i]->Next = NULL;
+	}
+}
+
+void insert(List l, int student_id) {
+	
+	List cur = l, next = cur->Next;
+	List newnode = (List)malloc(sizeof(struct ListNode));
+	newnode->id = student_id;
+	
+	newnode->Next = next;
+	cur->Next = newnode;	
+}
+
+//void insert(List l, int student_id) {
+//	
+//	List newnode = (List)malloc(sizeof(struct ListNode));
+//	newnode->id = student_id;
+//	newnode->Next = NULL;
+//	
+//	List cur = l, next = cur->Next;
+//	
+//	while(next &&  next->id < student_id) { //
+//		cur = next;
+//		next = next->Next;
+//	}
+//	
+//	newnode->Next = next;
+//	cur->Next = newnode;	
+//}
+
+int Hash(char *name) {
+	int res = 0, i = 0;
+	while(i < 3) {
+		res = res * 26 + name[i] - 'A';
+		i++;
+	}
+	return res * 10 + name[i] - '0';
+}
+
+int count(List l) {
+	List q = l->Next;
+	int res = 0;
+	while(q) {
+		res++;
+		q = q->Next;
+	}
+	return res;
+}
+
+int comp(const void* pa, const void *pb) {
+	
+	return *(int *)pa - *(int *)pb;
+}
+
+void printList(List l, int total, char stu[][5]) {
+	
+	List q = l->Next;
+	int arr[total], i = 0;
+	while(q) {
+		arr[i++] = q->id;
+		q = q->Next;
+	}
+	
+	qsort(arr, total, sizeof(int), comp);
+	
+	for(int i = 0; i < total; i++) {
+		printf("%s\n", stu[arr[i]]);
+	}
+}
+
+const int Max = 26 * 26 * 26 * 10 + 10;
+
+int main() {
+	
+	int n, k;
+	scanf("%d%d\n", &n, &k);
+	
+	List listArray[k + 1];
+	initLArray(listArray, k);
+	
+	char stu[Max][LEN], name[LEN];
+	int num, course_id, id;
+	for(int i = 0; i < n; i++) {
+		scanf("%s%d", name, &num);
+		id = Hash(name);
+		strcpy(stu[id], name);
+		//printf("%s %d\n", stu[id], num);
+		for(int j = 0; j < num; j++) {
+			scanf("%d", &course_id);
+			insert(listArray[course_id], id);
+		}
+	}
+	for(int i = 1; i <= k; i++) {
+		
+		int total = count(listArray[i]);
+		printf("%d %d\n", i, total);
+		printList(listArray[i], total, stu);
+	}
+	
+	
+	return 0;
+}
