@@ -1,0 +1,59 @@
+#include <stdio.h>
+#define MaxN 200
+#define MaxL 10000
+
+int fav_colors_indicies[MaxN + 1], legal_colors_indicies[MaxL + 1], longest[MaxL + 1];
+
+int max(int a, int b) {
+	if(a > b) return a;
+	return b;
+}
+
+void printArr(int *arr, int num) {
+	
+	for(int i = 0; i < num; i++) {
+		if(i) printf(" ");
+		printf("%d", arr[i]);
+	}
+	printf("\n");
+}
+
+int main() {
+	
+	int n, m, l, legal_num = 0, maxLength = 0;
+	scanf("%d %d", &n, &m);
+	
+	int fav_colr;
+	for(int i = 1; i < m + 1; i++) {
+		scanf("%d", &fav_colr);
+		fav_colors_indicies[fav_colr] = i;
+	}
+	
+	scanf("%d", &l);
+	//printArr(legal_colors_indicies, l);
+	
+	for(int i = 0; i < l; i++) {
+		scanf("%d", &fav_colr);
+		if( fav_colors_indicies[fav_colr] >= 1 )\
+		legal_colors_indicies[legal_num++] = fav_colors_indicies[fav_colr];
+	}
+	//printArr(legal_colors_indicies, legal_num);
+	
+	for(int i = 0; i < legal_num; i++) {
+		longest[i] = 1;
+	}
+	
+	for(int i = 0; i < legal_num; i++) {
+		for(int j = 0; j < i; j++) {
+			if(legal_colors_indicies[i] >= legal_colors_indicies[j]) {
+				longest[i] = max(longest[i], longest[j] + 1);
+				
+			}
+		}
+		maxLength = max(maxLength, longest[i]);
+	}
+	//printArr(longest, legal_num);
+	printf("%d\n", maxLength);
+	
+	return 0;
+}
