@@ -1,0 +1,105 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct ListNode *List;
+struct ListNode{
+	int Course_id;
+	List Next;
+};
+
+const int MaxN = 26*26*26*10 + 10; 
+
+void initArr(List *arr, int Max) {
+	
+	for(int i = 0; i < Max; i++) {
+		arr[i] = (List)malloc(sizeof(struct ListNode));
+		arr[i]->Next = NULL;
+	}
+}
+
+void insert(List L, int course_id) {
+	List l = (List)malloc(sizeof(struct ListNode));
+	l->Course_id = course_id;
+	l->Next = NULL;
+	
+	if(!( L->Next ) || L->Next->Course_id > course_id ) {
+		
+		l->Next = L->Next;
+		L->Next = l;
+	}
+	else {// course_id is greater than the course_id of the first node;
+		
+		List cur = L->Next, prev = cur;
+		while(cur && cur->Course_id < course_id) {
+			prev = cur;
+			cur = cur->Next;
+		}
+		
+		l->Next = cur;
+		prev->Next = l;	
+	}
+		
+}
+
+int Hash(char *name) {
+	
+	int hash = 0, i = 0;
+	while(i < 3) {
+		hash = hash * 26 + (name[i] - 'A');
+		i++;
+	}
+	hash = hash * 10 + name[i] - '0';
+	
+	return hash;
+}
+
+int getTotal(List l) {
+	
+	int res = 0;
+	List q = l->Next;
+	while(q) {
+		res++;
+		q = q->Next;
+	}
+	return res;
+}
+
+void printList(List l) {
+	
+	List q = l->Next;
+	while(q) {
+		printf(" %d", q->Course_id);
+		q = q->Next;
+	}
+	printf("\n");
+}
+
+int main() {
+	
+	List lArray[MaxN];
+	initArr(lArray, MaxN);
+	int n, k;
+	
+	char name[5];
+	scanf("%d%d", &n, &k);
+	
+	for(int i = 0; i < k; i++) {
+		
+		int id, ni;
+		scanf("%d%d\n", &id, &ni);
+		//printf("course is %d %d.\n", id, ni);
+		for(int j = 0; j < ni; j++) {
+			scanf("%s", name);
+			//printf("%s\n", name);
+			insert(lArray[Hash(name)], id);
+		}	
+	}
+	
+	for(int i = 0; i < n; i++) {
+		scanf("%s", name);
+		printf("%s %d", name, getTotal(lArray[Hash(name)]));
+		printList(lArray[Hash(name)]);
+	}
+	
+	return 0;
+}
