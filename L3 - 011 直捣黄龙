@@ -1,0 +1,191 @@
+#include <stdio.h>
+#include <string.h> 
+#define INF 65535
+#define LEN 4
+#define MAX 18278 //26 * 26 * 26 + 26 * 26 + 26
+#define MaxVertexNum 200
+
+typedef int Vertex;
+typedef enum{false, true}bool;
+
+int nameVertex[MAX];
+char city[MaxVertexNum][LEN];
+
+int Graph[MaxVertexNum][MaxVertexNum], enmyNum[MaxVertexNum],\
+dist[MaxVertexNum], vNum[MaxVertexNum], kill[MaxVertexNum], pathNum[MaxVertexNum];
+
+
+Vertex pre[MaxVertexNum];
+bool Visited[MaxVertexNum];
+
+int Hash(char * name) {
+	
+	int res = 0, i = 0;
+	while( name[i] ) {
+		res = res * 26 + name[i] - 'A';
+		i++;
+	}
+	
+	return res;
+}
+
+void initGraph(int Nv) {
+	for(Vertex u = 0; u < Nv; u++) {
+		for(Vertex v = 0; v < Nv; v++) {
+			Graph[u][v] = INF;
+		}
+	}
+	
+}
+
+void initPathNum() {
+	pathNum[0] = 1;
+}
+
+void initDist(int Nv) {
+	for(Vertex v = 0; v < Nv; v++) {
+		dist[v] = INF;
+	}
+}
+
+void initPre(int Nv) {
+	for(Vertex v = 0; v < Nv; v++) {
+		pre[v] = -1;
+	}
+}
+
+void readGraph(int Nv, int Ne) {
+	
+	//printf("Hello!\n");
+	initGraph(Nv);
+	char name[LEN], other[LEN];
+	int num;
+	for(int i = 1; i < Nv; i++) {
+		scanf("%s%d", city[i], &num);
+		nameVertex[Hash(city[i])] = i;
+		enmyNum[i] = num;
+		//printf("%s %d\n", city[i], num);
+	}
+	
+	int distance;
+	for(int i = 0; i < Ne; i++) {
+		scanf("%s%s%d", name, other, &distance);
+		Vertex u = nameVertex[Hash(name)], v = nameVertex[Hash(other)];
+		Graph[u][v] = Graph[v][u] = distance;
+		//printf("%d %d\n", u, v);
+		//printf("%s %s\n", city[u], city[v]);
+	}
+}
+
+
+void printArr(int *arr, int num) {
+	
+	for(int i = 0; i < num; i++) {
+		if(i) printf(" ");
+		printf("%d", arr[i]);
+	}
+	printf("\n");	
+}
+
+void dijkstra(int Nv, int our) {
+	
+	initDist(Nv);
+	initPre(Nv);
+	initPathNum();
+	dist[our] = 0;
+	
+	Vertex u, v, w;
+	
+	while(true) {
+		u = -1;
+		int MinDist = INF;
+		
+		for( v = 0; v < Nv; v++) {
+			if( !Visited[v] && dist[v] < MinDist) {
+				u = v;
+				MinDist = dist[v];
+			}
+		}
+		
+		if( u == -1 ) break;
+		
+		Visited[u] = true;
+		//printArr(dist, Nv);
+		//printf("u is %d\n", u);
+		for(v = 0; v < Nv; v++) {
+			if(!Visited[v] && Graph[u][v] < INF) {
+				if(  dist[u] + Graph[u][v] < dist[v] ) {
+					dist[v] = dist[u] + Graph[u][v];
+					//printf("distv %d is updated to %d\n", v, dist[v]);
+					pre[v] = u;
+					pathNum[v] = pathNum[u];
+					//printf("pathNum is updated to %d\n", pathNum[v]);
+					vNum[v] = vNum[u] + 1;
+					kill[v] = kill[u] + enmyNum[v];
+				}
+				
+				else if( dist[u] + Graph[u][v] == dist[v]) {
+					//printf("u is %d, dist v %d is %d\n", u, v, dist[v]);
+					pathNum[v] += pathNum[u];
+					if(vNum[u] + 1 > vNum[v]) {
+						pre[v] = u;
+						vNum[v] = vNum[u] + 1;
+						kill[v] = kill[u] + enmyNum[v];
+					}
+					
+					else if(vNum[u] + 1 == vNum[v]) {
+						
+						if(kill[u] + enmyNum[v] > kill[v]) {
+							pre[v] = u;
+							kill[v] = kill[u] + enmyNum[v];
+						}
+					}
+				}
+			}
+		}
+		
+	}
+	
+}
+
+
+void printPath(Vertex vEnemy, int Nv) {
+	
+	//printf("Hello\n");
+	Vertex stack[Nv];
+	int idx = 0;
+	while(pre[vEnemy] >= 0) {
+		stack[idx++] = vEnemy;
+		//printf("%d\n", stack[idx - 1]);
+		vEnemy = pre[vEnemy];
+	}
+	stack[idx++] = vEnemy;
+	for(int i = idx - 1; i >= 0; i--) {
+		if(i != idx - 1) printf("->");
+		printf("%s", city[stack[i]]);
+	}
+	printf("\n");
+}
+
+int main() {
+	
+	int Nv, Ne;
+	char our[LEN], enemy[LEN];
+	scanf("%d%d%s%s", &Nv, &Ne, our, enemy);
+	//printf("%d %d %s %s", Nv, Ne, our, enemy);
+	//printf("our is %d\n", Hash(our));
+	nameVertex[Hash(our)] = 0;
+	strcpy(city[0], our);
+	
+	readGraph(Nv, Ne);
+	
+	dijkstra(Nv, nameVertex[Hash(our)]);
+	
+	Vertex u = nameVertex[Hash(enemy)];
+	
+	//printf("%d\n", u);
+	//printArr(pathNum, Nv);
+	printPath(u, Nv);
+	
+	printf("%d %d %d\n", pathNum[u], dist[u], kill[u]);
+}
