@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define Max 30
+
+typedef enum{false, true} bool;
+
+typedef struct treeNode * Tree;
+struct treeNode {
+	int Data;
+	Tree Left, Right;
+};
+
+int in[Max], pre[Max], lvl[Max], idx;
+
+Tree createTree(int inLeft, int preLeft, int num) {
+	
+	if( num ) {
+		//printf("inLeft is %d, preLeft is %d, num is %d\n", inLeft, preLeft, num);
+		Tree t = (Tree)malloc(sizeof(struct treeNode));
+		t->Data = pre[preLeft];
+		
+		int pos = -1;
+		for(int i = inLeft; i < inLeft + num; i++) {
+			if(in[i] == pre[preLeft]) {
+				pos = i;
+				break;
+			}
+		}
+		
+		t->Right = createTree(inLeft, preLeft + 1, pos - inLeft);
+		t->Left = createTree(pos + 1, preLeft + pos - inLeft + 1, num - pos + inLeft - 1);
+		//printf("Helell.\n");
+		return t;
+	}
+	
+	return NULL;
+}
+
+void lvlOrder(Tree t, int num) {
+	
+	Tree Queue[num];
+	int front, rear;
+	
+	front = rear = 0;
+	
+	Queue[rear++] = t;
+	
+	while( front != rear ) {
+		
+		Tree tnode = Queue[front++];
+		lvl[idx++] = tnode->Data;
+		if(idx - 1) printf(" ");
+		printf("%d", lvl[idx - 1]);
+		
+		if( tnode->Left ) Queue[rear++] = tnode->Left;
+		if( tnode->Right ) Queue[rear++] = tnode->Right;
+	}
+}
+
+void readArr(int *arr, int num) {
+	for(int i = 0; i < num; i++) {
+		scanf("%d", &arr[i]);
+	}
+}
+
+void init(int num) {
+	
+	readArr(in, num);
+	readArr(pre, num);
+}
+
+void printArr(int *arr, int num) {
+	for(int i = 0; i < num; i++) {
+		if(i) printf(" ");
+		printf("%d", arr[i]);
+	}
+	printf("\n");
+}
+
+int main() {
+    
+    int n;
+	scanf("%d", &n);
+	
+	init(n);
+	
+	Tree t = createTree(0, 0, n);
+	
+	lvlOrder(t, n);
+    
+    return 0;
+}
